@@ -50,16 +50,26 @@ def merge_sort(flights):
             flights[k] = right_half[j]
             j += 1
             k += 1
+#Linear
+def lin_search(L, T):
+    result = []
+    for i in range(len(L)):
+        if L[i] == T:
+            result.append(i)
+    return result
 
-#Selection
-def selection_sort(books):
-    n = len(books)
-    for i in range(n):
-        min_index = i
-        for j in range(i+1, n):
-            if books[j][1] < books[min_index][1]:
-                min_index = j
-        books[i], books[min_index] = books[min_index], books[i]
+user_input = input("Enter list elements separated by spaces ")
+L = list(map(int, user_input.split()))
+
+T = int(input("Enter the target element to search for: "))
+
+result = lin_search(L, T)
+
+if len(result) != 0:
+    print("Target element " + str(T) + " found at index: " + str(result))
+
+else:
+    print("Target not found in list.")
 
 #Radix
 def counting_sort(arr, exp):
@@ -97,3 +107,13 @@ def radix_sort(arr):
         counting_sort(arr, exp)
         exp *= 10
     return arr
+
+#Quick
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quick_sort(left) + middle + quick_sort(right)
