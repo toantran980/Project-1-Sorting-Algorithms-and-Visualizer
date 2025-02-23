@@ -52,7 +52,7 @@ def merge_sort(flights):
             j += 1
             k += 1
 #Linear
-def lin_search(L, T):
+def linear_search(L, T):
     result = []
     for i in range(len(L)):
         if L[i] == T:
