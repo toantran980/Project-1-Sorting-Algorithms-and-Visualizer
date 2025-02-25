@@ -10,18 +10,6 @@ def bubble_sort(students):
             if students[j][1] > students[j+1][1]:
                 students[j], students[j+1] = students[j+1], students[j]
 
-#Insertion
-def insertion_sort(cards):
-    for i in range(1, len(cards)):
-        key = cards[i] #the card to be placed in correct position
-        j = i - 1 #index of last card in sorted position
-
-        while j >= 0 and key < cards[j]:
-            cards[j + 1] = cards[j] #shift elements to the right
-            j -= 1 #move one step to the left
-
-        cards[j + 1] = key #place key in its correct posiiton
-
 #Merge
 def merge_sort(flights):
     if len(flights) > 1:
@@ -105,3 +93,60 @@ def quick_sort(arr):
     middle = [x for x in arr if x == pivot]
     right = [x for x in arr if x > pivot]
     return quick_sort(left) + middle + quick_sort(right)
+
+
+# Take user input for list elements
+"""user_input = input("Enter a list of integers separated by spaces: ")
+L = list(map(int, user_input.split()))
+
+# Take user input for target element
+T = int(input("Enter an the target element to search: "))
+
+# Calling the linear_search function and store the result
+result = linear_search(L, T)
+
+# Display the result
+if result != -1:
+    print(f"Element {T} found at the index {result}.")
+else:
+    print(f"Element {T} not found at index {result}")
+print()
+
+
+num_students = int(input("Enter the number of students: "))
+students = []
+for _ in range(num_students):
+    name = input("Enter student name: ")
+    score = int(input(f"Enter {name}'s score: "))
+    students.append((name, score))
+bubble_sort(students)
+print("Sorted students by score: ", students)
+
+
+# Taking user input
+num_flights = int(input("Enter number of flights: "))
+flights = []
+for _ in range(num_flights):
+    flight_no = int(input("Enter flight number: "))
+    dep_time = int(input(f"Enter departure time for {flight_no}: "))
+    flights.append((flight_no, dep_time))
+
+    merge_sort(flights)
+
+# print the sorted flights and execution time
+print("Flight sorted by departure time: ", flights)
+
+print()
+
+random_list = [random.randint(10, 9999) for _ in range(10)]
+print("Orginal Array:", random_list)
+sorted_arr = quick_sort(random_list)
+print("Sorted Array:", sorted_arr)
+
+print()
+
+random_list = [random.randint(10, 9999) for _ in range(10)]
+
+print("Orginal Array:", random_list)
+sorted_arr = radix_sort(random_list)
+print("Sorted Array:", sorted_arr)"""

@@ -3,6 +3,7 @@ import random
 import time
 import tkinter as tk
 from tkinter import ttk
+import pygame
 
 # Initialize pygame
 pygame.init()
