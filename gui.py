@@ -55,8 +55,3 @@ Checkbutton(root, text="Linear Sort", variable = linear, onvalue = True, offvalu
 
 root.mainloop()
 
-
-
-
-root.mainloop()
-
