@@ -1,62 +1,3 @@
-<<<<<<< HEAD
-from tkinter import *
-
-#Setup
-root = Tk()
-root.title("Sorting Algorithm Tester")
-root.geometry('430x500')
-
-#functions
-def selected():
-    pass
-
-#vars
-bubble = BooleanVar()
-merge = BooleanVar()
-quick = BooleanVar()
-radix = BooleanVar()
-linear = BooleanVar()
-select = BooleanVar()
-lst = []
-max = 0
-length = 0
-entry = ""
-
-#radio button
-Radiobutton(root, text = "Random List", variable = select, value = False, command = selected).grid(row = 0)
-Radiobutton(root, text = "Defined List", variable = select, value = True).grid(row = 1)
-
-#stop button
-Button(root, text='Stop', width = 10, command=root.destroy).grid(row=10, column = 0, columnspan = 5)
-
-#Entry for defined list
-Label(root, text="Enter integers separated by commas").grid(row=2,columnspan=5)
-entry = Entry(root).grid(row = 3, columnspan = 5)
-
-#scale for choosing max value
-Label(root, text="Select Maximum Value for Integers in the Random List").grid(row=4,columnspan=5)
-maxscale = Scale(root, from_=0, to=9999, length = 300, orient=HORIZONTAL)
-maxscale.grid(row=5, column = 0, columnspan = 5)
-max = maxscale.get()
-
-#second scale for choosing the length of the list
-Label(root, text="Select Length of List").grid(row=6,columnspan=5)
-lengthscale = Scale(root, from_=0, to=9999, length = 300, orient=HORIZONTAL)
-lengthscale.grid(row=7, column = 0, columnspan = 5)
-length = lengthscale.get()
-
-# Checkboxes for algos
-Checkbutton(root, text="Bubble Sort", variable = bubble, onvalue = True, offvalue = False).grid(row=9, column=0, sticky=W)
-Checkbutton(root, text="Merge Sort", variable = merge, onvalue = True, offvalue = False).grid(row=9, column=1, sticky=W)
-Checkbutton(root, text="Quick Sort", variable = quick, onvalue = True, offvalue = False).grid(row=9, column=2, sticky=W)
-Checkbutton(root, text="Radix Sort", variable = radix, onvalue = True, offvalue = False).grid(row=9, column=3, sticky=W)
-Checkbutton(root, text="Linear Sort", variable = linear, onvalue = True, offvalue = False).grid(row=9, column=4, sticky=W)
-
-
-
-root.mainloop()
-
-=======
 from tkinter import *
 import random
 
@@ -103,9 +44,23 @@ def start(max, length, entry, b, m, q, r, l):
 def startbutton():
     start(maxscale.get(), lengthscale.get(), entryfield.get(), bubble.get(), merge.get(), quick.get(), radix.get(), linear.get())
 
+def pausebutton():
+    pass
+
+def pause():
+    pass
+
 #Reset function
 def reset():
-    pass
+    bubble.set(False)
+    merge.set(False)
+    quick.set(False)
+    radix.set(False)
+    linear.set(False)
+    select.set(False)
+    maxscale.set(0)
+    lengthscale.set(0)
+    entryfield.delete(0, END)
 
 #vars
 bubble = BooleanVar()
@@ -156,4 +111,3 @@ Checkbutton(root, text="Linear Sort", variable = linear, onvalue = True, offvalu
 root.mainloop()
 
 
->>>>>>> a80fb9e9a85fb088e2c0e79f6b57685de6f9a169
