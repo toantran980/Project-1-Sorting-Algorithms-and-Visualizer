@@ -77,6 +77,9 @@ Radiobutton(root, text = "Defined List", variable = select, value = True, comman
 #stop button
 Button(root, text='Stop', width = 10, command=root.destroy).grid(row=10, column = 0, columnspan = 1)
 
+#pause button
+#Button(root, text='Pause', width = 10, command=pausebutton).grid(row=10, column = 1, columnspan = 1)
+
 #start button
 Button(root, text='Start', width = 10, command=startbutton).grid(row=10, column = 4, columnspan = 1)
 
