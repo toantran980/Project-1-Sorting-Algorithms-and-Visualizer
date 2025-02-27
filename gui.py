@@ -141,7 +141,7 @@ Checkbutton(root, text="Radix Sort", variable = radix, onvalue = True, offvalue 
 Checkbutton(root, text="Linear Search", variable = linear, onvalue = True, offvalue = False).grid(row=9, column=4, sticky=W)
 
 
-# Entry for target value ---> Not implemented yet
+# Entry for target value
 target_label = Label(root, text="Enter target value for search")
 target_label.grid(row=12, columnspan=5)
 target_entry = Entry(root)
