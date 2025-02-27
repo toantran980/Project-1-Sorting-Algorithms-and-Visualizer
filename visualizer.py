@@ -1,14 +1,10 @@
 import pygame
 import random
-import time
 
 pygame.init()
 
 # Screen dimensions
 WIDTH, HEIGHT = 800, 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Sorting Algorithm Visualization")
-
 # Colors
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
@@ -16,10 +12,15 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 # Draw each array
-def draw_array(arr, highlight_index=None):
+def draw_array(screen, arr, title, highlight_index=None):
     screen.fill(BLACK)
     bar_width = WIDTH // len(arr) if len(arr) > 0 else 1
     max_height = max(arr) if arr else 1
+
+    # Draw title
+    font = pygame.font.Font(None, 36)
+    text = font.render(title, True, RED)
+    screen.blit(text, (10, 10))
 
     for i in range(len(arr)):
         bar_height = (arr[i] / max_height) * (HEIGHT - 50)
@@ -36,13 +37,13 @@ def bubble_sort_visual(arr):
         for j in range(n - i - 1):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
-            steps.append(arr.copy())
+                steps.append(arr.copy())  # Capture step only when a swap occurs
     return steps
 
 # Merge Sort Visualization
 def merge_sort_visual(arr):
     steps = []
-
+    
     def merge_sort_helper(arr):
         if len(arr) > 1:
             mid = len(arr) // 2
@@ -81,7 +82,7 @@ def merge_sort_visual(arr):
 # Quick Sort Visualization
 def quick_sort_visual(arr):
     steps = []
-
+    
     def quick_sort_helper(arr):
         if len(arr) <= 1:
             steps.append(arr.copy())
@@ -142,71 +143,67 @@ def linear_search_visual(arr, target):
     return steps, -1
 
 # Visualize Sorting
-def visualize_sorting(sorting_function, arr, delay):
+def visualize_sorting(screen, sorting_function, arr, title, delay):
     steps = sorting_function(arr.copy())
     for step in steps:
-        draw_array(step)
+        draw_array(screen, step, title)
         pygame.time.delay(delay)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return  # Exit immediately
 
-
 # Visualize Linear Search
-def visualize_linear_search(arr, target):
+def visualize_linear_search(screen, arr, target):
     steps, found_index = linear_search_visual(arr, target)
     for arr_state, index in steps:
-        draw_array(arr_state, highlight_index=index)
+        draw_array(screen, arr_state, "Linear Search", highlight_index=index)
         pygame.time.delay(200)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return  # Exit immediately
 
-
 # Main function
-def visualize(algo, arr, target):
+def visualize(screen, algo_list, arr, target):
+    for algo in algo_list:
+        if algo in ["b", "m", "q", "r"]:
+            title_map = {
+                "b": "Bubble Sort",
+                "m": "Merge Sort",
+                "q": "Quick Sort",
+                "r": "Radix Sort",
+            }
+            bubble_sort_delay = max(5, 100 // len(arr)) # Faster for larger arrays
+            visualize_sorting(
+                screen,
+                {
+                    "b": bubble_sort_visual,
+                    "m": merge_sort_visual,
+                    "q": quick_sort_visual,
+                    "r": radix_sort_visual,
+                }[algo], arr, title_map[algo], bubble_sort_delay if algo == "b" else 200
+            )
+        elif algo == "l" and target is not None:
+            visualize_linear_search(screen, arr, target)
+
+        # Brief pause before the next visualization
+        pygame.time.delay(1000)  # 1 second delay before the next algorithm
+
+# Running it/testing
+if __name__ == "__main__":
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Sorting Algorithm Visualization")
+    
+    arr = [random.randint(0, 9999) for _ in range(100)]
+    target = arr[random.randint(0, len(arr) - 1)] if arr else None
+    visualize(screen, ["b", "m", "q", "r", "l"], arr=arr, target=target)
+
+    # Keep the window open until closed by the user
     running = True
-    v = algo.lower()
-
-    # Only draw the array if an algorithm is selected
-    if v in {"b", "m", "q", "r", "l"}:
-        print(f"Searching for: {target}")
-
-        start_time = time.time()  # Start time measurement
-
-        # Run the corresponding algorithm
-        if v == "b":
-            visualize_sorting(bubble_sort_visual, arr, len(arr) % 10)
-        elif v == "m":
-            visualize_sorting(merge_sort_visual, arr, 200)
-        elif v == "q":
-            visualize_sorting(quick_sort_visual, arr, 200)
-        elif v == "r":
-            visualize_sorting(radix_sort_visual, arr, 200)
-        elif v == "l" and target is not None:
-            visualize_linear_search(arr, target)
-
-        end_time = time.time()  # End time measurement
-        time_nanoseconds = (end_time - start_time) * 1000000000
-    else:
-        running = False
-        time_nanoseconds = 0
-
-    # Always keep the window responsive
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
     pygame.quit()
-
-    return time_nanoseconds
-
-
-# running it/ testing
-if __name__ == "__main__":
-    arr = [random.randint(0, 9999) for _ in range(100)]
-    target = arr[random.randint(0, len(arr) - 1)] if arr else None
-    visualize("w", arr=arr, target=target)
