@@ -202,7 +202,7 @@ def visualize(algo, arr, target):
 
     pygame.quit()
 
-    #return time_nanoseconds
+    return time_nanoseconds
 
 
 # running it/ testing

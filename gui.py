@@ -83,7 +83,7 @@ def reset():
     lengthscale.set(0)
     entryfield.delete(0, END)
     execution_time_label.config(text="Execution time: N/A")
-    visualize("reset", [], None)
+    #visualize("reset", [], None)
 
 
 #vars
