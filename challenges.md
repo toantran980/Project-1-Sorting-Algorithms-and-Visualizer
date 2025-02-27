@@ -6,3 +6,4 @@ learning tkinter ???
 using pygame to create visuals  
 creating the reset and stop button  
 showing each sorting algorithm working within the visualization  
+how to visualize each sorting algorithm  
