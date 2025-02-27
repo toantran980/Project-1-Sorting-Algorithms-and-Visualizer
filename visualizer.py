@@ -140,12 +140,17 @@ def linear_search_visual(arr, target):
             return steps, i
     return steps, -1
 
-# Visualize Sorting Algorithms
-def visualize_sorting(sorting_function, arr):
+# Visualize Sorting
+def visualize_sorting(sorting_function, arr, delay):
     steps = sorting_function(arr.copy())
     for step in steps:
         draw_array(step)
-        pygame.time.delay(50)
+        pygame.time.delay(delay)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return  # Exit immediately
+
 
 # Visualize Linear Search
 def visualize_linear_search(arr, target):
@@ -153,34 +158,43 @@ def visualize_linear_search(arr, target):
     for arr_state, index in steps:
         draw_array(arr_state, highlight_index=index)
         pygame.time.delay(200)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return  # Exit immediately
+
 
 # Main function
-def main(bubble, merge, quick, radix, linear, arr, target):
+def visualize(algo, arr, target):
     running = True
     draw_array(arr)
-    
+
     print(f"Searching for: {target}")
 
-    # Each algo visualization
-    if bubble:
-        visualize_sorting(bubble_sort_visual, arr)
-    if merge:
-        visualize_sorting(merge_sort_visual, arr)
-    if quick:
-        visualize_sorting(quick_sort_visual, arr)
-    if radix:
-        visualize_sorting(radix_sort_visual, arr)
-    if linear and target is not None:
+    v = algo.lower()
+
+    # Algorithms below
+    if v == "b":
+        visualize_sorting(bubble_sort_visual, arr, len(arr) % 10)
+    if v == "m":
+        visualize_sorting(merge_sort_visual, arr, 200)
+    if v == "q":
+        visualize_sorting(quick_sort_visual, arr, 200)
+    if v == "r":
+        visualize_sorting(radix_sort_visual, arr, 200)
+    if v == "l" and target is not None:
         visualize_linear_search(arr, target)
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
     pygame.quit()
 
-# running it
+
+# running it/ testing
 if __name__ == "__main__":
-    arr = [random.randint(0, 9999) for _ in range(10)]
+    arr = [random.randint(0, 9999) for _ in range(100)]
     target = arr[random.randint(0, len(arr) - 1)] if arr else None
-    main(bubble=True, merge=False, quick=True, radix=False, linear=True, arr=arr, target=target)
+    visualize("l", arr=arr, target=target)
