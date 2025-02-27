@@ -7,10 +7,9 @@ import pygame
 #Setup
 root = Tk()
 root.title("Sorting Algorithm Tester")
-root.geometry('430x500')
+root.geometry('450x300')
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-# pause_flag = False
 
 #testing tools
 def on_left_click(event):
@@ -76,10 +75,6 @@ def start(max, length, entry, b, m, q, r, l):
 def startbutton():
     start(maxscale.get(), lengthscale.get(), entryfield.get(), bubble.get(), merge.get(), quick.get(), radix.get(), linear.get())
 
-"""def pausebutton():
-    global pause_flag
-    pause_flag = not pause_flag"""
-
 #Reset function
 def reset():
     bubble.set(False)
@@ -91,8 +86,9 @@ def reset():
     maxscale.set(0)
     lengthscale.set(0)
     entryfield.delete(0, END)
-    # execution_time_label.config(text="Execution time: N/A")
-
+    target_entry.delete(0, END)
+    execution_time_label.config(text="Execution time: N/A")
+    
 #vars
 bubble = BooleanVar()
 merge = BooleanVar()
@@ -108,8 +104,6 @@ Radiobutton(root, text = "Defined List", variable = select, value = True, comman
 #stop button
 Button(root, text='Stop', width = 10, command=root.destroy).grid(row=10, column = 0, columnspan = 1)
 
-#pause button
-#Button(root, text='Pause', width=10, command=pausebutton).grid(row=10, column=1, columnspan=1)
 
 #start button
 Button(root, text='Start', width = 10, command=startbutton).grid(row=10, column = 4, columnspan = 1)
@@ -140,7 +134,6 @@ Checkbutton(root, text="Quick Sort", variable = quick, onvalue = True, offvalue 
 Checkbutton(root, text="Radix Sort", variable = radix, onvalue = True, offvalue = False).grid(row=9, column=3, sticky=W)
 Checkbutton(root, text="Linear Search", variable = linear, onvalue = True, offvalue = False).grid(row=9, column=4, sticky=W)
 
-
 # Entry for target value
 target_label = Label(root, text="Enter target value for search")
 target_label.grid(row=12, columnspan=5)
@@ -151,7 +144,4 @@ target_entry.grid(row=15, columnspan=5)
 execution_time_label = Label(root, text="Execution time: N/A")
 execution_time_label.grid(row=11, column=0, columnspan=5)
 
-
 root.mainloop()
-
-
