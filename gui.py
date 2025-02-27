@@ -2,11 +2,14 @@ from tkinter import *
 import random
 import time
 from visualizer import visualize
+import pygame
+
 #Setup
 root = Tk()
 root.title("Sorting Algorithm Tester")
 root.geometry('430x500')
-
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 #functions
 
 #testing tools
@@ -45,20 +48,23 @@ def start(max, length, entry, b, m, q, r, l):
         lst = [random.randint(0,max) for _ in range(length)]
         
     #call imported output function here
+
+    target = None
+    if l:
+        target = lst[random.randint(0, len(lst) - 1)]
+    
     execution_time = 0
     if b:
-        execution_time = visualize("b", lst, None)
+        execution_time = visualize(screen, ["b"], lst, target)
     if m:
-        execution_time = visualize("m", lst, None)
+        execution_time = visualize(screen, ["m"], lst, target)
     if q:
-        execution_time = visualize("q", lst, None)
+        execution_time = visualize(screen, ["q"], lst, target)
     if r:
-        execution_time = visualize("r", lst, None)
+        execution_time = visualize(screen, ["r"], lst, target)
     if l:
-        execution_time = visualize("l", lst, None)
-    #if not b and not m and not q and not r and not l:
-        #execution_time = visualize("none", lst, None)
-
+        execution_time = visualize(screen, ["l"], lst, target)
+    
     execution_time_label.config(text=f"Execution time: {execution_time:.6f} nanoseconds")
     
 def startbutton():
@@ -69,7 +75,6 @@ def pausebutton():
 
 def pause():
     pass
-
 
 #Reset function
 def reset():
