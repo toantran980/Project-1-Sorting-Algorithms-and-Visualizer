@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 pygame.init()
 
@@ -167,6 +168,7 @@ def visualize_linear_search(screen, arr, target):
 # Main function
 def visualize(screen, algo_list, arr, target):
     for algo in algo_list:
+        start_time = time.time() 
         if algo in ["b", "m", "q", "r"]:
             title_map = {
                 "b": "Bubble Sort",
@@ -189,6 +191,10 @@ def visualize(screen, algo_list, arr, target):
 
         # Brief pause before the next visualization
         pygame.time.delay(1000)  # 1 second delay before the next algorithm
+
+        end_time = time.time()  # End time measurement
+        time_nanoseconds = (end_time - start_time) * 1000000000
+        return time_nanoseconds
 
 # Running it/testing
 if __name__ == "__main__":
