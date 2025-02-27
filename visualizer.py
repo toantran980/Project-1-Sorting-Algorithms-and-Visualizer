@@ -1,3 +1,4 @@
+# NOTE: should work multiple algos being run now, if it doesnt ill see if i can fix it
 import pygame
 import random
 
@@ -22,6 +23,7 @@ def draw_array(screen, arr, title, highlight_index=None):
     text = font.render(title, True, RED)
     screen.blit(text, (10, 10))
 
+    #Making the bars and colors
     for i in range(len(arr)):
         bar_height = (arr[i] / max_height) * (HEIGHT - 50)
         color = GREEN if i == highlight_index else BLUE
@@ -153,7 +155,7 @@ def visualize_sorting(screen, sorting_function, arr, title, delay):
                 pygame.quit()
                 return  # Exit immediately
 
-# Visualize Linear Search
+# Visualize Linear Search // Specific because its a search not a sort
 def visualize_linear_search(screen, arr, target):
     steps, found_index = linear_search_visual(arr, target)
     for arr_state, index in steps:
