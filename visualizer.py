@@ -167,24 +167,27 @@ def visualize_linear_search(arr, target):
 # Main function
 def visualize(algo, arr, target):
     running = True
-    draw_array(arr)
-
-    print(f"Searching for: {target}")
-
     v = algo.lower()
 
-    # Algorithms below
-    if v == "b":
-        visualize_sorting(bubble_sort_visual, arr, len(arr) % 10)
-    if v == "m":
-        visualize_sorting(merge_sort_visual, arr, 200)
-    if v == "q":
-        visualize_sorting(quick_sort_visual, arr, 200)
-    if v == "r":
-        visualize_sorting(radix_sort_visual, arr, 200)
-    if v == "l" and target is not None:
-        visualize_linear_search(arr, target)
+    # Only draw the array if an algorithm is selected
+    if v in {"b", "m", "q", "r", "l"}:
+        print(f"Searching for: {target}")
 
+        # Run the corresponding algorithm
+        if v == "b":
+            visualize_sorting(bubble_sort_visual, arr, len(arr) % 10)
+        elif v == "m":
+            visualize_sorting(merge_sort_visual, arr, 200)
+        elif v == "q":
+            visualize_sorting(quick_sort_visual, arr, 200)
+        elif v == "r":
+            visualize_sorting(radix_sort_visual, arr, 200)
+        elif v == "l" and target is not None:
+            visualize_linear_search(arr, target)
+    else:
+        running = False
+
+    # Always keep the window responsive
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -197,4 +200,4 @@ def visualize(algo, arr, target):
 if __name__ == "__main__":
     arr = [random.randint(0, 9999) for _ in range(100)]
     target = arr[random.randint(0, len(arr) - 1)] if arr else None
-    visualize("l", arr=arr, target=target)
+    visualize("w", arr=arr, target=target)
