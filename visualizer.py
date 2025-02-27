@@ -12,6 +12,8 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+# pause_flag = False
+
 # Draw each array
 def draw_array(screen, arr, title, highlight_index=None):
     screen.fill(BLACK)
@@ -26,7 +28,7 @@ def draw_array(screen, arr, title, highlight_index=None):
     for i in range(len(arr)):
         bar_height = (arr[i] / max_height) * (HEIGHT - 50)
         color = GREEN if i == highlight_index else BLUE
-        pygame.draw.rect(screen, color, (i * bar_width, HEIGHT - bar_height, bar_width, bar_height))
+        pygame.draw.rect(screen, color, (i * (bar_width + 2), HEIGHT - bar_height, bar_width, bar_height))
 
     pygame.display.update()
 
@@ -143,6 +145,20 @@ def linear_search_visual(arr, target):
             return steps, i
     return steps, -1
 
+
+'''def visualize_sorting(screen, sorting_function, arr, title, delay):
+    global pause_flag
+    steps = sorting_function(arr.copy())
+    for step in steps:
+        while pause_flag:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+            pygame.time.delay(100)  # Check every 100ms if the pause flag is still set
+        draw_array(screen, step, title)
+        pygame.time.delay(delay)'''
+
 # Visualize Sorting
 def visualize_sorting(screen, sorting_function, arr, title, delay):
     steps = sorting_function(arr.copy())
@@ -167,6 +183,7 @@ def visualize_linear_search(screen, arr, target):
 
 # Main function
 def visualize(screen, algo_list, arr, target):
+    # global pause_flag
     for algo in algo_list:
         start_time = time.time() 
         if algo in ["b", "m", "q", "r"]:
@@ -176,7 +193,7 @@ def visualize(screen, algo_list, arr, target):
                 "q": "Quick Sort",
                 "r": "Radix Sort",
             }
-            bubble_sort_delay = max(5, 100 // len(arr)) # Faster for larger arrays
+            bubble_sort_delay = max(1, 100 // len(arr)) # Faster for larger arrays
             visualize_sorting(
                 screen,
                 {
@@ -194,16 +211,16 @@ def visualize(screen, algo_list, arr, target):
 
         end_time = time.time()  # End time measurement
         time_nanoseconds = (end_time - start_time) * 1000000000
-        return time_nanoseconds
+    return time_nanoseconds
 
 # Running it/testing
 if __name__ == "__main__":
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sorting Algorithm Visualization")
     
-    arr = [random.randint(0, 9999) for _ in range(100)]
+    arr = [random.randint(0, 9999) for _ in range(5000)] # Adjusted for scalability
     target = arr[random.randint(0, len(arr) - 1)] if arr else None
-    visualize(screen, ["b", "m", "q", "r", "l"], arr=arr, target=target)
+    visualize(screen, ["m"], arr=arr, target=target)
 
     # Keep the window open until closed by the user
     running = True

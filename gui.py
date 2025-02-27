@@ -10,7 +10,7 @@ root.title("Sorting Algorithm Tester")
 root.geometry('430x500')
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-#functions
+# pause_flag = False
 
 #testing tools
 def on_left_click(event):
@@ -27,7 +27,6 @@ root.bind("<Button-1>", on_left_click)
 
 #Function to try to determine which options will be displayed
 def selected():
-    max = 0
     maxscale.grid_forget()
     lengthscale.grid_forget()
     entryfield.grid(row = 3, columnspan = 5)
@@ -46,13 +45,19 @@ def start(max, length, entry, b, m, q, r, l):
         lst = list(map(int, entry.split()))
     else:
         lst = [random.randint(0,max) for _ in range(length)]
-        
-    #call imported output function here
 
+
+    #call imported output function here
     target = None
     if l:
         target = lst[random.randint(0, len(lst) - 1)]
-    
+        
+        target_value = target_entry.get()  
+        if target_value.isdigit():
+            target = int(target_value)
+        else:
+            raise TypeError("Only integers are allowed for target value")
+        
     execution_time = 0
     if b:
         execution_time = visualize(screen, ["b"], lst, target)
@@ -64,17 +69,17 @@ def start(max, length, entry, b, m, q, r, l):
         execution_time = visualize(screen, ["r"], lst, target)
     if l:
         execution_time = visualize(screen, ["l"], lst, target)
+    if l and target is not None:
+        execution_time_label.config(text=f"Execution time: {execution_time:.6f} nanoseconds")
     
     execution_time_label.config(text=f"Execution time: {execution_time:.6f} nanoseconds")
     
 def startbutton():
     start(maxscale.get(), lengthscale.get(), entryfield.get(), bubble.get(), merge.get(), quick.get(), radix.get(), linear.get())
 
-def pausebutton():
-    pass
-
-def pause():
-    pass
+"""def pausebutton():
+    global pause_flag
+    pause_flag = not pause_flag"""
 
 #Reset function
 def reset():
@@ -87,9 +92,7 @@ def reset():
     maxscale.set(0)
     lengthscale.set(0)
     entryfield.delete(0, END)
-    execution_time_label.config(text="Execution time: N/A")
-    #visualize("reset", [], None)
-
+    # execution_time_label.config(text="Execution time: N/A")
 
 #vars
 bubble = BooleanVar()
@@ -107,7 +110,7 @@ Radiobutton(root, text = "Defined List", variable = select, value = True, comman
 Button(root, text='Stop', width = 10, command=root.destroy).grid(row=10, column = 0, columnspan = 1)
 
 #pause button
-#Button(root, text='Pause', width = 10, command=pausebutton).grid(row=10, column = 1, columnspan = 1)
+#Button(root, text='Pause', width=10, command=pausebutton).grid(row=10, column=1, columnspan=1)
 
 #start button
 Button(root, text='Start', width = 10, command=startbutton).grid(row=10, column = 4, columnspan = 1)
@@ -136,7 +139,14 @@ Checkbutton(root, text="Bubble Sort", variable = bubble, onvalue = True, offvalu
 Checkbutton(root, text="Merge Sort", variable = merge, onvalue = True, offvalue = False).grid(row=9, column=1, sticky=W)
 Checkbutton(root, text="Quick Sort", variable = quick, onvalue = True, offvalue = False).grid(row=9, column=2, sticky=W)
 Checkbutton(root, text="Radix Sort", variable = radix, onvalue = True, offvalue = False).grid(row=9, column=3, sticky=W)
-Checkbutton(root, text="Linear Sort", variable = linear, onvalue = True, offvalue = False).grid(row=9, column=4, sticky=W)
+Checkbutton(root, text="Linear Search", variable = linear, onvalue = True, offvalue = False).grid(row=9, column=4, sticky=W)
+
+
+# Entry for target value ---> Not implemented yet
+target_label = Label(root, text="Enter target value for search")
+target_label.grid(row=12, columnspan=5)
+target_entry = Entry(root)
+target_entry.grid(row=15, columnspan=5)
 
 # Label to display execution time
 execution_time_label = Label(root, text="Execution time: N/A")
