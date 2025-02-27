@@ -1,6 +1,5 @@
 import pygame
 import random
-import time
 
 pygame.init()
 
@@ -15,7 +14,8 @@ RED = (255, 0, 0)
 # Draw each array
 def draw_array(screen, arr, title, highlight_index=None):
     screen.fill(BLACK)
-    bar_width = WIDTH // len(arr) if len(arr) > 0 else 1
+    num_bars = max(1, len(arr))  # Prevent division by zero
+    bar_width = max(1, WIDTH // num_bars)  # Ensure at least 1 pixel width
     max_height = max(arr) if arr else 1
 
     # Draw title
@@ -168,7 +168,6 @@ def visualize_linear_search(screen, arr, target):
 # Main function
 def visualize(screen, algo_list, arr, target):
     for algo in algo_list:
-        start_time = time.time() 
         if algo in ["b", "m", "q", "r"]:
             title_map = {
                 "b": "Bubble Sort",
@@ -176,7 +175,7 @@ def visualize(screen, algo_list, arr, target):
                 "q": "Quick Sort",
                 "r": "Radix Sort",
             }
-            bubble_sort_delay = max(5, 100 // len(arr)) # Faster for larger arrays
+            bubble_sort_delay = max(1, 100 // len(arr))  # Ensure delay scales properly
             visualize_sorting(
                 screen,
                 {
@@ -192,20 +191,15 @@ def visualize(screen, algo_list, arr, target):
         # Brief pause before the next visualization
         pygame.time.delay(1000)  # 1 second delay before the next algorithm
 
-        end_time = time.time()  # End time measurement
-        time_nanoseconds = (end_time - start_time) * 1000000000
-        return time_nanoseconds
-
 # Running it/testing
 if __name__ == "__main__":
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sorting Algorithm Visualization")
     
-    arr = [random.randint(0, 9999) for _ in range(100)]
+    arr = [random.randint(0, 9999) for _ in range(5000)]  # Adjusted for scalability
     target = arr[random.randint(0, len(arr) - 1)] if arr else None
-    visualize(screen, ["b", "m", "q", "r", "l"], arr=arr, target=target)
+    visualize(screen, ["m"], arr=arr, target=target)
 
-    # Keep the window open until closed by the user
     running = True
     while running:
         for event in pygame.event.get():
