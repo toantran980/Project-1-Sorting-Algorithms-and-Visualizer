@@ -1,6 +1,6 @@
 import pygame
 import random
-import time
+import time 
 
 pygame.init()
 
@@ -185,7 +185,7 @@ def visualize_linear_search(screen, arr, target):
 def visualize(screen, algo_list, arr, target):
     # global pause_flag
     for algo in algo_list:
-        start_time = time.time() 
+        start_time = time.time()  # Start time measurement
         if algo in ["b", "m", "q", "r"]:
             title_map = {
                 "b": "Bubble Sort",
@@ -193,7 +193,7 @@ def visualize(screen, algo_list, arr, target):
                 "q": "Quick Sort",
                 "r": "Radix Sort",
             }
-            bubble_sort_delay = max(1, 100 // len(arr)) # Faster for larger arrays
+            bubble_sort_delay = max(1, 100 // len(arr))  # Ensure delay scales properly
             visualize_sorting(
                 screen,
                 {
@@ -222,7 +222,6 @@ if __name__ == "__main__":
     target = arr[random.randint(0, len(arr) - 1)] if arr else None
     visualize(screen, ["m"], arr=arr, target=target)
 
-    # Keep the window open until closed by the user
     running = True
     while running:
         for event in pygame.event.get():

@@ -46,7 +46,6 @@ def start(max, length, entry, b, m, q, r, l):
     else:
         lst = [random.randint(0,max) for _ in range(length)]
 
-
     #call imported output function here
     target = None
     if l:
