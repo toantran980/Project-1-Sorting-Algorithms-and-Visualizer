@@ -1,6 +1,7 @@
 from tkinter import *
 import random
-
+import time
+from visualizer import visualize
 #Setup
 root = Tk()
 root.title("Sorting Algorithm Tester")
@@ -11,6 +12,10 @@ root.geometry('430x500')
 #testing tools
 def on_left_click(event):
     print(bubble.get())
+    print(merge.get())
+    print(quick.get())
+    print(radix.get())
+    print(linear.get())
     print(maxscale.get())
     print(lengthscale.get())
     print(entryfield.get())
@@ -40,7 +45,22 @@ def start(max, length, entry, b, m, q, r, l):
         lst = [random.randint(0,max) for _ in range(length)]
         
     #call imported output function here
+    execution_time = 0
+    if b:
+        execution_time = visualize("b", lst, None)
+    if m:
+        execution_time = visualize("m", lst, None)
+    if q:
+        execution_time = visualize("q", lst, None)
+    if r:
+        execution_time = visualize("r", lst, None)
+    if l:
+        execution_time = visualize("l", lst, None)
+    #if not b and not m and not q and not r and not l:
+        #execution_time = visualize("none", lst, None)
 
+    execution_time_label.config(text=f"Execution time: {execution_time:.6f} nanoseconds")
+    
 def startbutton():
     start(maxscale.get(), lengthscale.get(), entryfield.get(), bubble.get(), merge.get(), quick.get(), radix.get(), linear.get())
 
@@ -49,6 +69,7 @@ def pausebutton():
 
 def pause():
     pass
+
 
 #Reset function
 def reset():
@@ -61,6 +82,9 @@ def reset():
     maxscale.set(0)
     lengthscale.set(0)
     entryfield.delete(0, END)
+    execution_time_label.config(text="Execution time: N/A")
+    visualize("reset", [], None)
+
 
 #vars
 bubble = BooleanVar()
@@ -109,6 +133,9 @@ Checkbutton(root, text="Quick Sort", variable = quick, onvalue = True, offvalue 
 Checkbutton(root, text="Radix Sort", variable = radix, onvalue = True, offvalue = False).grid(row=9, column=3, sticky=W)
 Checkbutton(root, text="Linear Sort", variable = linear, onvalue = True, offvalue = False).grid(row=9, column=4, sticky=W)
 
+# Label to display execution time
+execution_time_label = Label(root, text="Execution time: N/A")
+execution_time_label.grid(row=11, column=0, columnspan=5)
 
 
 root.mainloop()

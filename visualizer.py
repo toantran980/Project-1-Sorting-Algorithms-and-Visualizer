@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 pygame.init()
 
@@ -173,6 +174,8 @@ def visualize(algo, arr, target):
     if v in {"b", "m", "q", "r", "l"}:
         print(f"Searching for: {target}")
 
+        start_time = time.time()  # Start time measurement
+
         # Run the corresponding algorithm
         if v == "b":
             visualize_sorting(bubble_sort_visual, arr, len(arr) % 10)
@@ -184,8 +187,12 @@ def visualize(algo, arr, target):
             visualize_sorting(radix_sort_visual, arr, 200)
         elif v == "l" and target is not None:
             visualize_linear_search(arr, target)
+
+        end_time = time.time()  # End time measurement
+        time_nanoseconds = (end_time - start_time) * 1000000000
     else:
         running = False
+        time_nanoseconds = 0
 
     # Always keep the window responsive
     while running:
@@ -194,6 +201,8 @@ def visualize(algo, arr, target):
                 running = False
 
     pygame.quit()
+
+    #return time_nanoseconds
 
 
 # running it/ testing
