@@ -12,8 +12,6 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-# pause_flag = False
-
 # Draw each array
 def draw_array(screen, arr, title, highlight_index=None):
     screen.fill(BLACK)
@@ -47,58 +45,68 @@ def bubble_sort_visual(arr):
 def merge_sort_visual(arr):
     steps = []
     
-    def merge_sort_helper(arr):
-        if len(arr) > 1:
-            mid = len(arr) // 2
-            left_half = arr[:mid]
-            right_half = arr[mid:]
-
-            merge_sort_helper(left_half)
-            merge_sort_helper(right_half)
-
-            i = j = k = 0
-
-            while i < len(left_half) and j < len(right_half):
-                if left_half[i] < right_half[j]:
-                    arr[k] = left_half[i]
-                    i += 1
-                else:
-                    arr[k] = right_half[j]
-                    j += 1
-                k += 1
-
-            while i < len(left_half):
+    def merge_sort_helper(arr, left, right):
+        if left < right:
+            mid = (left + right) // 2
+            merge_sort_helper(arr, left, mid)
+            merge_sort_helper(arr, mid + 1, right)
+            merge(arr, left, mid, right)
+    
+    def merge(arr, left, mid, right):
+        left_half = arr[left:mid + 1]
+        right_half = arr[mid + 1:right + 1]
+        
+        i = j = 0
+        k = left
+        
+        while i < len(left_half) and j < len(right_half):
+            if left_half[i] <= right_half[j]:
                 arr[k] = left_half[i]
                 i += 1
-                k += 1
-
-            while j < len(right_half):
+            else:
                 arr[k] = right_half[j]
                 j += 1
-                k += 1
-
+            k += 1
             steps.append(arr.copy())
-
-    merge_sort_helper(arr)
+        
+        while i < len(left_half):
+            arr[k] = left_half[i]
+            i += 1
+            k += 1
+            steps.append(arr.copy())
+        
+        while j < len(right_half):
+            arr[k] = right_half[j]
+            j += 1
+            k += 1
+            steps.append(arr.copy())
+    
+    merge_sort_helper(arr, 0, len(arr) - 1)
     return steps
 
 # Quick Sort Visualization
 def quick_sort_visual(arr):
     steps = []
     
-    def quick_sort_helper(arr):
-        if len(arr) <= 1:
-            steps.append(arr.copy())
-            return arr
-        pivot = arr[len(arr) // 2]
-        left = [x for x in arr if x < pivot]
-        middle = [x for x in arr if x == pivot]
-        right = [x for x in arr if x > pivot]
-        sorted_arr = quick_sort_helper(left) + middle + quick_sort_helper(right)
-        steps.append(sorted_arr)
-        return sorted_arr
-
-    quick_sort_helper(arr)
+    def quick_sort_helper(arr, low, high):
+        if low < high:
+            pi = partition(arr, low, high)
+            quick_sort_helper(arr, low, pi - 1)
+            quick_sort_helper(arr, pi + 1, high)
+    
+    def partition(arr, low, high):
+        pivot = arr[high]
+        i = low - 1
+        for j in range(low, high):
+            if arr[j] <= pivot:
+                i += 1
+                arr[i], arr[j] = arr[j], arr[i]
+                steps.append(arr.copy())
+        arr[i + 1], arr[high] = arr[high], arr[i + 1]
+        steps.append(arr.copy())
+        return i + 1
+    
+    quick_sort_helper(arr, 0, len(arr) - 1)
     return steps
 
 # Radix Sort Visualization
@@ -144,20 +152,6 @@ def linear_search_visual(arr, target):
         if arr[i] == target:
             return steps, i
     return steps, -1
-
-
-'''def visualize_sorting(screen, sorting_function, arr, title, delay):
-    global pause_flag
-    steps = sorting_function(arr.copy())
-    for step in steps:
-        while pause_flag:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return
-            pygame.time.delay(100)  # Check every 100ms if the pause flag is still set
-        draw_array(screen, step, title)
-        pygame.time.delay(delay)'''
 
 # Visualize Sorting
 def visualize_sorting(screen, sorting_function, arr, title, delay):
