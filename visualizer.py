@@ -15,7 +15,10 @@ RED = (255, 0, 0)
 # Draw each array
 def draw_array(screen, arr, title, highlight_index=None):
     screen.fill(BLACK)
-    bar_width = WIDTH // len(arr) if len(arr) > 0 else 1
+    
+    # Dynamically adjust the bar width based on the number of elements
+    num_elements = len(arr)
+    bar_width = max(1, (WIDTH - 10) // num_elements)  # Adjust bar width with some margin
     max_height = max(arr) if arr else 1
 
     # Draw title
@@ -23,7 +26,14 @@ def draw_array(screen, arr, title, highlight_index=None):
     text = font.render(title, True, RED)
     screen.blit(text, (10, 10))
 
-    for i in range(len(arr)):
+    # Calculate the total width used by the bars (including spacing)
+    total_width = num_elements * bar_width + (num_elements - 1) * 2  # account for bar spacing
+    
+    # If the total width exceeds screen width, adjust bar width accordingly
+    if total_width > WIDTH:
+        bar_width = (WIDTH - (num_elements - 1) * 2) // num_elements
+
+    for i in range(num_elements):
         bar_height = (arr[i] / max_height) * (HEIGHT - 50)
         color = GREEN if i == highlight_index else BLUE
         pygame.draw.rect(screen, color, (i * (bar_width + 2), HEIGHT - bar_height, bar_width, bar_height))
@@ -183,6 +193,8 @@ def visualize_linear_search(screen, arr, target):
 
 # Main function
 def visualize(screen, algo_list, arr, target):
+    # Limit the number of visible elements
+    visible_arr = arr[:200]  # Show up to 200 elements for large arrays
     for algo in algo_list:
         start_time = time.time()  # Start time measurement
         if algo in ["b", "m", "q", "r"]:
@@ -193,10 +205,10 @@ def visualize(screen, algo_list, arr, target):
                 "r": "Radix Sort",
             }
             delay_map = {
-                "b": 5,  # delay for bubble sort
-                "m": 200,  # delay for merge sort
-                "q": 200,  # delay for quick sort
-                "r": 200,  # delay for radix sort
+                "b": 1,  # Reduce delay for bubble sort
+                "m": 20,  # Reduce delay for merge sort
+                "q": 20,  # Reduce delay for quick sort
+                "r": 20,  # Reduce delay for radix sort
             }
             visualize_sorting(
                 screen,
@@ -205,13 +217,13 @@ def visualize(screen, algo_list, arr, target):
                     "m": merge_sort_visual,
                     "q": quick_sort_visual,
                     "r": radix_sort_visual,
-                }[algo], arr, title_map[algo], delay_map[algo]
+                }[algo], visible_arr, title_map[algo], delay_map[algo]
             )
         elif algo == "l" and target is not None:
-            visualize_linear_search(screen, arr, target)
+            visualize_linear_search(screen, visible_arr, target)
 
         # Brief pause before the next visualization
-        pygame.time.delay(1000)  # 1 second delay before the next algorithm
+        pygame.time.delay(500)  # 0.5 second delay before the next algorithm
 
         end_time = time.time()  # End time measurement
         time_nanoseconds = (end_time - start_time) * 1_000_000_000
@@ -222,9 +234,9 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Sorting Algorithm Visualization")
     
-    arr = [random.randint(0, 9999) for _ in range(5000)] # Adjusted for scalability
+    arr = [random.randint(0, 9999) for _ in range(9999)]  # Larger array size for testing
     target = arr[random.randint(0, len(arr) - 1)] if arr else None
-    visualize(screen, ["m"], arr=arr, target=target)
+    visualize(screen, ["b"], arr=arr, target=target)
 
     running = True
     while running:
