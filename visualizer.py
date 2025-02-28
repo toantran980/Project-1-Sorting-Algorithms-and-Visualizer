@@ -236,7 +236,7 @@ if __name__ == "__main__":
     
     arr = [random.randint(0, 9999) for _ in range(9999)]  # Larger array size for testing
     target = arr[random.randint(0, len(arr) - 1)] if arr else None
-    visualize(screen, ["b"], arr=arr, target=target)
+    visualize(screen, ["r"], arr=arr, target=target)
 
     running = True
     while running:
