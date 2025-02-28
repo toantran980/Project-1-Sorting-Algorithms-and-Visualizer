@@ -38,7 +38,7 @@ def bubble_sort_visual(arr):
         for j in range(n - i - 1):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
-                steps.append(arr.copy())  # Capture step only when a swap occurs
+                steps.append((arr.copy(), j + 1))  # Capture step with current index
     return steps
 
 # Merge Sort Visualization
@@ -67,19 +67,19 @@ def merge_sort_visual(arr):
                 arr[k] = right_half[j]
                 j += 1
             k += 1
-            steps.append(arr.copy())
+            steps.append((arr.copy(), k))  # Capture step with current index
         
         while i < len(left_half):
             arr[k] = left_half[i]
             i += 1
             k += 1
-            steps.append(arr.copy())
+            steps.append((arr.copy(), k))  # Capture step with current index
         
         while j < len(right_half):
             arr[k] = right_half[j]
             j += 1
             k += 1
-            steps.append(arr.copy())
+            steps.append((arr.copy(), k))  # Capture step with current index
     
     merge_sort_helper(arr, 0, len(arr) - 1)
     return steps
@@ -87,13 +87,13 @@ def merge_sort_visual(arr):
 # Quick Sort Visualization
 def quick_sort_visual(arr):
     steps = []
-    
+
     def quick_sort_helper(arr, low, high):
         if low < high:
-            pi = partition(arr, low, high)
-            quick_sort_helper(arr, low, pi - 1)
-            quick_sort_helper(arr, pi + 1, high)
-    
+            pivot_index = partition(arr, low, high)
+            quick_sort_helper(arr, low, pivot_index - 1)
+            quick_sort_helper(arr, pivot_index + 1, high)
+
     def partition(arr, low, high):
         pivot = arr[high]
         i = low - 1
@@ -101,12 +101,13 @@ def quick_sort_visual(arr):
             if arr[j] <= pivot:
                 i += 1
                 arr[i], arr[j] = arr[j], arr[i]
-                steps.append(arr.copy())
+                steps.append((arr.copy(), j))  # Capture step with current index
         arr[i + 1], arr[high] = arr[high], arr[i + 1]
-        steps.append(arr.copy())
+        steps.append((arr.copy(), i + 1))  # Capture step with current index
         return i + 1
-    
+
     quick_sort_helper(arr, 0, len(arr) - 1)
+    steps.append((arr.copy(), -1))  # Final step with no highlight
     return steps
 
 # Radix Sort Visualization
@@ -132,6 +133,7 @@ def radix_sort_visual(arr):
 
         for i in range(n):
             arr[i] = output[i]
+            steps.append((arr.copy(), i))  # Capture step with current index
 
     if arr:
         max_num = max(arr)
@@ -139,9 +141,9 @@ def radix_sort_visual(arr):
 
         while max_num // exp > 0:
             counting_sort(arr, exp)
-            steps.append(arr.copy())
             exp *= 10
 
+    steps.append((arr.copy(), -1))  # Final step with no highlight
     return steps
 
 # Linear Search Visualization
@@ -156,13 +158,17 @@ def linear_search_visual(arr, target):
 # Visualize Sorting
 def visualize_sorting(screen, sorting_function, arr, title, delay):
     steps = sorting_function(arr.copy())
-    for step in steps:
-        draw_array(screen, step, title)
+    sorted_arr = steps[-1][0]
+    for step, highlight_index in steps:
+        draw_array(screen, step, title, highlight_index=highlight_index)
         pygame.time.delay(delay)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return  # Exit immediately
+    # Redraw the array with all bars in blue after sorting is complete
+    draw_array(screen, sorted_arr, title)
+    pygame.display.update()
 
 # Visualize Linear Search
 def visualize_linear_search(screen, arr, target):
@@ -177,7 +183,6 @@ def visualize_linear_search(screen, arr, target):
 
 # Main function
 def visualize(screen, algo_list, arr, target):
-    # global pause_flag
     for algo in algo_list:
         start_time = time.time()  # Start time measurement
         if algo in ["b", "m", "q", "r"]:
@@ -187,7 +192,12 @@ def visualize(screen, algo_list, arr, target):
                 "q": "Quick Sort",
                 "r": "Radix Sort",
             }
-            bubble_sort_delay = max(1, 100 // len(arr))  # Ensure delay scales properly
+            delay_map = {
+                "b": 200,  # Set a higher delay for bubble sort
+                "m": 200,  # Set a lower delay for merge sort
+                "q": 200,  # Set a lower delay for quick sort
+                "r": 200,  # Set a lower delay for radix sort
+            }
             visualize_sorting(
                 screen,
                 {
@@ -195,7 +205,7 @@ def visualize(screen, algo_list, arr, target):
                     "m": merge_sort_visual,
                     "q": quick_sort_visual,
                     "r": radix_sort_visual,
-                }[algo], arr, title_map[algo], bubble_sort_delay if algo == "b" else 200
+                }[algo], arr, title_map[algo], delay_map[algo]
             )
         elif algo == "l" and target is not None:
             visualize_linear_search(screen, arr, target)
@@ -204,7 +214,7 @@ def visualize(screen, algo_list, arr, target):
         pygame.time.delay(1000)  # 1 second delay before the next algorithm
 
         end_time = time.time()  # End time measurement
-        time_nanoseconds = (end_time - start_time) * 1000000000
+        time_nanoseconds = (end_time - start_time) * 1_000_000_000
     return time_nanoseconds
 
 # Running it/testing
