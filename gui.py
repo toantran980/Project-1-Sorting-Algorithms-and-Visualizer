@@ -28,6 +28,7 @@ root.bind("<Button-1>", on_left_click)
 def selected():
     maxscale.grid_forget()
     lengthscale.grid_forget()
+    l2.grid_forget()
     entryfield.grid(row=3, columnspan=5)
     l1.grid(row=2, columnspan=5)
 
