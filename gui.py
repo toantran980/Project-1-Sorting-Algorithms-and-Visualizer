@@ -162,13 +162,13 @@ entryfield = Entry(root)
 # Scale for choosing max value
 l2 = Label(root, text="Select Maximum Value for Integers in the Random List")
 l2.grid(row=4, columnspan=5)
-maxscale = Scale(root, from_=0, to=999, length=300, orient=HORIZONTAL)
+maxscale = Scale(root, from_=0, to=9999, length=300, orient=HORIZONTAL)
 maxscale.grid(row=5, column=0, columnspan=5)
 
 # Second scale for choosing the length of the list
 l3 = Label(root, text="Select Length of List")
 l3.grid(row=2, columnspan=5)
-lengthscale = Scale(root, from_=0, to=999, length=300, orient=HORIZONTAL)
+lengthscale = Scale(root, from_=0, to=9999, length=300, orient=HORIZONTAL)
 lengthscale.grid(row=3, column=0, columnspan=5)
 
 # Checkboxes for algos
