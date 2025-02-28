@@ -22,22 +22,59 @@ def on_left_click(event):
     print(lengthscale.get())
     print(entryfield.get())
 
-root.bind("<Button-1>", on_left_click)
+#root.bind("<Button-1>", on_left_click)
 
 # Function to try to determine which options will be displayed
 def selected():
     maxscale.grid_forget()
     lengthscale.grid_forget()
     l2.grid_forget()
+    l3.grid_forget()
+    bubbleb.grid_forget()
+    mergeb.grid_forget()
+    quickb.grid_forget()
+    radixb.grid_forget()
+    linearb.grid_forget()
+    start_.grid_forget()
+    stop.grid_forget()
+    reset.grid_forget()
+    
+    
+    bubbleb.grid(row=4, column=0, sticky=W)
+    mergeb.grid(row=4, column=1, sticky=W)
+    quickb.grid(row=4, column=2, sticky=W)
+    radixb.grid(row=4, column=3, sticky=W)
+    linearb.grid(row=4, column=4, sticky=W)
+    stop.grid(row=7, column=0, columnspan=1)
+    reset.grid(row=7, column=2, columnspan=1)
+    start_.grid(row=7, column=4, columnspan=1)
     entryfield.grid(row=3, columnspan=5)
     l1.grid(row=2, columnspan=5)
 
 def deselected():
     entryfield.grid_forget()
+    l1.grid_forget()
+    bubble_.grid_forget()
+    merge_.grid_forget()
+    quick_.grid_forget()
+    radix_.grid_forget()
+    linear_.grid_forget()
+    start_.grid_forget()
+    stop.grid_forget()
+    reset.grid_forget()
+
+    bubble_.grid(row=6, column=0, sticky=W)
+    merge_.grid(row=6, column=1, sticky=W)
+    quick_.grid(row=6, column=2, sticky=W)
+    radix_.grid(row=6, column=3, sticky=W)
+    linear_.grid(row=6, column=4, sticky=W)
+    stop.grid(row=7, column=0, columnspan=1)
+    reset.grid(row=7, column=2, columnspan=1)
+    start_.grid(row=7, column=4, columnspan=1)
     l3.grid(row=2, columnspan=5)
     l2.grid(row=4, columnspan=5)
     maxscale.grid(row=5, column=0, columnspan=5)
-    lengthscale.grid(row=7, column=0, columnspan=5)
+    lengthscale.grid(row=3, column=0, columnspan=5)
 
 # Function connected to start button
 def start(max, length, entry, b, m, q, r, l):
@@ -107,13 +144,16 @@ Radiobutton(root, text="Random List", variable=select, value=False, command=dese
 Radiobutton(root, text="Defined List", variable=select, value=True, command=selected).grid(row=1)
 
 # Stop button
-Button(root, text='Stop', width=10, command=root.destroy).grid(row=10, column=0, columnspan=1)
+stop = Button(root, text='Stop', width=10, command=root.destroy)
+stop.grid(row=7, column=0, columnspan=1)
 
 # Start button
-Button(root, text='Start', width=10, command=startbutton).grid(row=10, column=4, columnspan=1)
+start_ = Button(root, text='Start', width=10, command=startbutton)
+start_.grid(row=7, column=4, columnspan=1)
 
 # Reset button
-Button(root, text='Reset', width=10, command=reset).grid(row=10, column=2, columnspan=1)
+reset = Button(root, text='Reset', width=10, command=reset)
+reset.grid(row=7, column=2, columnspan=1)
 
 # Entry for defined list
 l1 = Label(root, text="Enter integers separated by spaces")
@@ -122,27 +162,27 @@ entryfield = Entry(root)
 # Scale for choosing max value
 l2 = Label(root, text="Select Maximum Value for Integers in the Random List")
 l2.grid(row=4, columnspan=5)
-maxscale = Scale(root, from_=0, to=9999, length=300, orient=HORIZONTAL)
+maxscale = Scale(root, from_=0, to=999, length=300, orient=HORIZONTAL)
 maxscale.grid(row=5, column=0, columnspan=5)
 
 # Second scale for choosing the length of the list
 l3 = Label(root, text="Select Length of List")
-l3.grid(row=6, columnspan=5)
-lengthscale = Scale(root, from_=0, to=9999, length=300, orient=HORIZONTAL)
-lengthscale.grid(row=7, column=0, columnspan=5)
+l3.grid(row=2, columnspan=5)
+lengthscale = Scale(root, from_=0, to=999, length=300, orient=HORIZONTAL)
+lengthscale.grid(row=3, column=0, columnspan=5)
 
 # Checkboxes for algos
-Checkbutton(root, text="Bubble Sort", variable=bubble, onvalue=True, offvalue=False).grid(row=9, column=0, sticky=W)
-Checkbutton(root, text="Merge Sort", variable=merge, onvalue=True, offvalue=False).grid(row=9, column=1, sticky=W)
-Checkbutton(root, text="Quick Sort", variable=quick, onvalue=True, offvalue=False).grid(row=9, column=2, sticky=W)
-Checkbutton(root, text="Radix Sort", variable=radix, onvalue=True, offvalue=False).grid(row=9, column=3, sticky=W)
-Checkbutton(root, text="Linear Search", variable=linear, onvalue=True, offvalue=False).grid(row=9, column=4, sticky=W)
+bubble_ = Checkbutton(root, text="Bubble Sort", variable=bubble, onvalue=True, offvalue=False).grid(row=6, column=0, sticky=W)
+merge_ = Checkbutton(root, text="Merge Sort", variable=merge, onvalue=True, offvalue=False).grid(row=6, column=1, sticky=W)
+quick_ = Checkbutton(root, text="Quick Sort", variable=quick, onvalue=True, offvalue=False).grid(row=6, column=2, sticky=W)
+radix_ = Checkbutton(root, text="Radix Sort", variable=radix, onvalue=True, offvalue=False).grid(row=6, column=3, sticky=W)
+linear_ = Checkbutton(root, text="Linear Search", variable=linear, onvalue=True, offvalue=False).grid(row=6, column=4, sticky=W)
 
 # Entry for target value
 target_label = Label(root, text="Enter target value for search")
-target_label.grid(row=12, columnspan=5)
+target_label.grid(row=9, columnspan=5)
 target_entry = Entry(root)
-target_entry.grid(row=15, columnspan=5)
+target_entry.grid(row=10, columnspan=5)
 
 # Error message label
 error_message_label = Label(root, text="", fg="red")
@@ -150,6 +190,6 @@ error_message_label.grid(row=13, column=0, columnspan=5)
 
 # Label to display execution time
 execution_time_label = Label(root, text="Execution time: N/A")
-execution_time_label.grid(row=11, column=0, columnspan=5)
+execution_time_label.grid(row=8, column=0, columnspan=5)
 
 root.mainloop()
