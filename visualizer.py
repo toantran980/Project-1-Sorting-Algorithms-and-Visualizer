@@ -193,10 +193,10 @@ def visualize(screen, algo_list, arr, target):
                 "r": "Radix Sort",
             }
             delay_map = {
-                "b": 200,  # Set a higher delay for bubble sort
-                "m": 200,  # Set a lower delay for merge sort
-                "q": 200,  # Set a lower delay for quick sort
-                "r": 200,  # Set a lower delay for radix sort
+                "b": 200,  # delay for bubble sort
+                "m": 200,  # delay for merge sort
+                "q": 200,  # delay for quick sort
+                "r": 200,  # delay for radix sort
             }
             visualize_sorting(
                 screen,
