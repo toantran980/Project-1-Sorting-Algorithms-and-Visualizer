@@ -1,235 +1,154 @@
-import pygame
+from tkinter import *
 import random
-import time 
+import time
+from visualizer import visualize
+import pygame
 
-pygame.init()
-
-# Screen dimensions
+# Setup
+root = Tk()
+root.title("Sorting Algorithm Tester")
+root.geometry('450x350')
 WIDTH, HEIGHT = 800, 600
-# Colors
-BLACK = (0, 0, 0)
-BLUE = (0, 0, 255)
-GREEN = (0, 255, 0)
-RED = (255, 0, 0)
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# Draw each array
-def draw_array(screen, arr, title, highlight_index=None):
-    screen.fill(BLACK)
-    bar_width = WIDTH // len(arr) if len(arr) > 0 else 1
-    max_height = max(arr) if arr else 1
+# Testing tools
+def on_left_click(event):
+    print(bubble.get())
+    print(merge.get())
+    print(quick.get())
+    print(radix.get())
+    print(linear.get())
+    print(maxscale.get())
+    print(lengthscale.get())
+    print(entryfield.get())
 
-    # Draw title
-    font = pygame.font.Font(None, 36)
-    text = font.render(title, True, RED)
-    screen.blit(text, (10, 10))
+root.bind("<Button-1>", on_left_click)
 
-    for i in range(len(arr)):
-        bar_height = (arr[i] / max_height) * (HEIGHT - 50)
-        color = GREEN if i == highlight_index else BLUE
-        pygame.draw.rect(screen, color, (i * (bar_width + 2), HEIGHT - bar_height, bar_width, bar_height))
+# Function to try to determine which options will be displayed
+def selected():
+    maxscale.grid_forget()
+    lengthscale.grid_forget()
+    entryfield.grid(row=3, columnspan=5)
+    l1.grid(row=2, columnspan=5)
 
-    pygame.display.update()
+def deselected():
+    entryfield.grid_forget()
+    l3.grid(row=2, columnspan=5)
+    l2.grid(row=4, columnspan=5)
+    maxscale.grid(row=5, column=0, columnspan=5)
+    lengthscale.grid(row=7, column=0, columnspan=5)
 
-# Bubble Sort Visualization
-def bubble_sort_visual(arr):
-    n = len(arr)
-    steps = []
-    for i in range(n - 1):
-        for j in range(n - i - 1):
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
-                steps.append((arr.copy(), j + 1))  # Capture step with current index
-    return steps
+# Function connected to start button
+def start(max, length, entry, b, m, q, r, l):
+    error_message_label.config(text="")  # Clear any previous error message
+    if max == 0:
+        lst = list(map(int, entry.split()))
+    else:
+        lst = [random.randint(0, max) for _ in range(length)]
 
-# Merge Sort Visualization
-def merge_sort_visual(arr):
-    steps = []
+    # Call imported output function here
+    target = None
+    if l:
+        target_value = target_entry.get()
+        if target_value.isdigit():
+            target = int(target_value)
+        else:
+            error_message_label.config(text="Only integers are allowed for target value")
+            return
+        if target not in lst:
+            error_message_label.config(text="Target value is not in the list")
+            return
     
-    def merge_sort_helper(arr, left, right):
-        if left < right:
-            mid = (left + right) // 2
-            merge_sort_helper(arr, left, mid)
-            merge_sort_helper(arr, mid + 1, right)
-            merge(arr, left, mid, right)
+    execution_time = 0
+    if b:
+        execution_time = visualize(screen, ["b"], lst, target)
+    if m:
+        execution_time = visualize(screen, ["m"], lst, target)
+    if q:
+        execution_time = visualize(screen, ["q"], lst, target)
+    if r:
+        execution_time = visualize(screen, ["r"], lst, target)
+    if l:
+        execution_time = visualize(screen, ["l"], lst, target)
+    if l and target is not None:
+        execution_time_label.config(text=f"Execution time: {execution_time:.6f} nanoseconds")
     
-    def merge(arr, left, mid, right):
-        left_half = arr[left:mid + 1]
-        right_half = arr[mid + 1:right + 1]
-        
-        i = j = 0
-        k = left
-        
-        while i < len(left_half) and j < len(right_half):
-            if left_half[i] <= right_half[j]:
-                arr[k] = left_half[i]
-                i += 1
-            else:
-                arr[k] = right_half[j]
-                j += 1
-            k += 1
-            steps.append((arr.copy(), k))  # Capture step with current index
-        
-        while i < len(left_half):
-            arr[k] = left_half[i]
-            i += 1
-            k += 1
-            steps.append((arr.copy(), k))  # Capture step with current index
-        
-        while j < len(right_half):
-            arr[k] = right_half[j]
-            j += 1
-            k += 1
-            steps.append((arr.copy(), k))  # Capture step with current index
-    
-    merge_sort_helper(arr, 0, len(arr) - 1)
-    return steps
+    execution_time_label.config(text=f"Execution time: {execution_time:.6f} nanoseconds")
 
-# Quick Sort Visualization
-def quick_sort_visual(arr):
-    steps = []
+def startbutton():
+    start(maxscale.get(), lengthscale.get(), entryfield.get(), bubble.get(), merge.get(), quick.get(), radix.get(), linear.get())
 
-    def quick_sort_helper(arr, low, high):
-        if low < high:
-            pivot_index = partition(arr, low, high)
-            quick_sort_helper(arr, low, pivot_index - 1)
-            quick_sort_helper(arr, pivot_index + 1, high)
+# Reset function
+def reset():
+    bubble.set(False)
+    merge.set(False)
+    quick.set(False)
+    radix.set(False)
+    linear.set(False)
+    select.set(False)
+    maxscale.set(0)
+    lengthscale.set(0)
+    entryfield.delete(0, END)
+    target_entry.delete(0, END)
+    execution_time_label.config(text="Execution time: N/A")
+    error_message_label.config(text="") 
 
-    def partition(arr, low, high):
-        pivot = arr[high]
-        i = low - 1
-        for j in range(low, high):
-            if arr[j] <= pivot:
-                i += 1
-                arr[i], arr[j] = arr[j], arr[i]
-                steps.append((arr.copy(), j))  # Capture step with current index
-        arr[i + 1], arr[high] = arr[high], arr[i + 1]
-        steps.append((arr.copy(), i + 1))  # Capture step with current index
-        return i + 1
+# Vars
+bubble = BooleanVar()
+merge = BooleanVar()
+quick = BooleanVar()
+radix = BooleanVar()
+linear = BooleanVar()
+select = BooleanVar()
 
-    quick_sort_helper(arr, 0, len(arr) - 1)
-    steps.append((arr.copy(), -1))  # Final step with no highlight
-    return steps
+# Radio button
+Radiobutton(root, text="Random List", variable=select, value=False, command=deselected).grid(row=0)
+Radiobutton(root, text="Defined List", variable=select, value=True, command=selected).grid(row=1)
 
-# Radix Sort Visualization
-def radix_sort_visual(arr):
-    steps = []
+# Stop button
+Button(root, text='Stop', width=10, command=root.destroy).grid(row=10, column=0, columnspan=1)
 
-    def counting_sort(arr, exp):
-        n = len(arr)
-        output = [0] * n
-        count = [0] * 10
+# Start button
+Button(root, text='Start', width=10, command=startbutton).grid(row=10, column=4, columnspan=1)
 
-        for i in range(n):
-            index = (arr[i] // exp) % 10
-            count[index] += 1
+# Reset button
+Button(root, text='Reset', width=10, command=reset).grid(row=10, column=2, columnspan=1)
 
-        for i in range(1, 10):
-            count[i] += count[i - 1]
+# Entry for defined list
+l1 = Label(root, text="Enter integers separated by spaces")
+entryfield = Entry(root)
 
-        for i in range(n - 1, -1, -1):
-            index = (arr[i] // exp) % 10
-            output[count[index] - 1] = arr[i]
-            count[index] -= 1
+# Scale for choosing max value
+l2 = Label(root, text="Select Maximum Value for Integers in the Random List")
+l2.grid(row=4, columnspan=5)
+maxscale = Scale(root, from_=0, to=9999, length=300, orient=HORIZONTAL)
+maxscale.grid(row=5, column=0, columnspan=5)
 
-        for i in range(n):
-            arr[i] = output[i]
-            steps.append((arr.copy(), i))  # Capture step with current index
+# Second scale for choosing the length of the list
+l3 = Label(root, text="Select Length of List")
+l3.grid(row=6, columnspan=5)
+lengthscale = Scale(root, from_=0, to=9999, length=300, orient=HORIZONTAL)
+lengthscale.grid(row=7, column=0, columnspan=5)
 
-    if arr:
-        max_num = max(arr)
-        exp = 1
+# Checkboxes for algos
+Checkbutton(root, text="Bubble Sort", variable=bubble, onvalue=True, offvalue=False).grid(row=9, column=0, sticky=W)
+Checkbutton(root, text="Merge Sort", variable=merge, onvalue=True, offvalue=False).grid(row=9, column=1, sticky=W)
+Checkbutton(root, text="Quick Sort", variable=quick, onvalue=True, offvalue=False).grid(row=9, column=2, sticky=W)
+Checkbutton(root, text="Radix Sort", variable=radix, onvalue=True, offvalue=False).grid(row=9, column=3, sticky=W)
+Checkbutton(root, text="Linear Search", variable=linear, onvalue=True, offvalue=False).grid(row=9, column=4, sticky=W)
 
-        while max_num // exp > 0:
-            counting_sort(arr, exp)
-            exp *= 10
+# Entry for target value
+target_label = Label(root, text="Enter target value for search")
+target_label.grid(row=12, columnspan=5)
+target_entry = Entry(root)
+target_entry.grid(row=15, columnspan=5)
 
-    steps.append((arr.copy(), -1))  # Final step with no highlight
-    return steps
+# Error message label
+error_message_label = Label(root, text="", fg="red")
+error_message_label.grid(row=13, column=0, columnspan=5)
 
-# Linear Search Visualization
-def linear_search_visual(arr, target):
-    steps = []
-    for i in range(len(arr)):
-        steps.append((arr.copy(), i))
-        if arr[i] == target:
-            return steps, i
-    return steps, -1
+# Label to display execution time
+execution_time_label = Label(root, text="Execution time: N/A")
+execution_time_label.grid(row=11, column=0, columnspan=5)
 
-# Visualize Sorting
-def visualize_sorting(screen, sorting_function, arr, title, delay):
-    steps = sorting_function(arr.copy())
-    sorted_arr = steps[-1][0]
-    for step, highlight_index in steps:
-        draw_array(screen, step, title, highlight_index=highlight_index)
-        pygame.time.delay(delay)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                return  # Exit immediately
-    # Redraw the array with all bars in blue after sorting is complete
-    draw_array(screen, sorted_arr, title)
-    pygame.display.update()
-
-# Visualize Linear Search
-def visualize_linear_search(screen, arr, target):
-    steps, found_index = linear_search_visual(arr, target)
-    for arr_state, index in steps:
-        draw_array(screen, arr_state, "Linear Search", highlight_index=index)
-        pygame.time.delay(200)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                return  # Exit immediately
-
-# Main function
-def visualize(screen, algo_list, arr, target):
-    for algo in algo_list:
-        start_time = time.time()  # Start time measurement
-        if algo in ["b", "m", "q", "r"]:
-            title_map = {
-                "b": "Bubble Sort",
-                "m": "Merge Sort",
-                "q": "Quick Sort",
-                "r": "Radix Sort",
-            }
-            delay_map = {
-                "b": 200,  # Set a higher delay for bubble sort
-                "m": 200,  # Set a lower delay for merge sort
-                "q": 200,  # Set a lower delay for quick sort
-                "r": 200,  # Set a lower delay for radix sort
-            }
-            visualize_sorting(
-                screen,
-                {
-                    "b": bubble_sort_visual,
-                    "m": merge_sort_visual,
-                    "q": quick_sort_visual,
-                    "r": radix_sort_visual,
-                }[algo], arr, title_map[algo], delay_map[algo]
-            )
-        elif algo == "l" and target is not None:
-            visualize_linear_search(screen, arr, target)
-
-        # Brief pause before the next visualization
-        pygame.time.delay(1000)  # 1 second delay before the next algorithm
-
-        end_time = time.time()  # End time measurement
-        time_nanoseconds = (end_time - start_time) * 1_000_000_000
-    return time_nanoseconds
-
-# Running it/testing
-if __name__ == "__main__":
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Sorting Algorithm Visualization")
-    
-    arr = [random.randint(0, 9999) for _ in range(5000)] # Adjusted for scalability
-    target = arr[random.randint(0, len(arr) - 1)] if arr else None
-    visualize(screen, ["m"], arr=arr, target=target)
-
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-    pygame.quit()
+root.mainloop()
